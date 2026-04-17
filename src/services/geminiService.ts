@@ -20,28 +20,27 @@ async function fetchNewsFromRSS(category: string, keywords: string, count: numbe
   if (category === "Bloomberg 주식뉴스") query = "블룸버그 주식";
   if (keywords) query += ` ${keywords}`;
   
-  const url = `https://news.google.com/rss/search?q=${encodeURIComponent(query)}&hl=ko&gl=KR&ceid=KR:ko&t=${Date.now()}`;
-  const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`;
+  // Use our Vercel/Vite proxy to fetch directly from Google News without CORS issues
+  const proxyUrl = `/api/google-news?q=${encodeURIComponent(query)}&hl=ko&gl=KR&ceid=KR:ko&t=${Date.now()}`;
   
   try {
     const response = await fetch(proxyUrl);
     if (!response.ok) throw new Error("Network response was not ok");
-    const data = await response.json();
+    const textData = await response.text();
     
-    if (data.status !== 'ok') {
-      throw new Error("RSS parsing failed");
-    }
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(textData, "text/xml");
     
+    const items = Array.from(xmlDoc.querySelectorAll("item"));
     const results = [];
-    const items = data.items || [];
     
     for (const item of items) {
-      const titleFull = item.title || "";
+      const titleFull = item.querySelector("title")?.textContent || "";
       const titleParts = titleFull.split(" - ");
       const source = titleParts.length > 1 ? titleParts.pop()?.trim() || "알 수 없음" : "알 수 없음";
       const title = titleParts.join(" - ").trim();
       
-      const description = item.description || "";
+      const description = item.querySelector("description")?.textContent || "";
       const cleanDescription = description.replace(/<[^>]*>?/gm, '').trim();
       
       const isExcluded = excludeTitles.some(ex => title.includes(ex) || ex.includes(title));

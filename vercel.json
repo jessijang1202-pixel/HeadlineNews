@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/google-news",
+      "destination": "https://news.google.com/rss/search"
+    }
+  ]
+}
