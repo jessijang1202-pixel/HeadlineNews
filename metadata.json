@@ -1,0 +1,6 @@
+{
+  "name": "Headline News Generator",
+  "description": "A tool to generate and export headline news summaries for CEOs, focusing on text-based insights.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
