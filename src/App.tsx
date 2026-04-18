@@ -146,7 +146,7 @@ export default function App() {
             <div className="w-8 h-8 bg-slate-900 rounded flex items-center justify-center">
               <span className="text-white font-serif font-bold text-lg leading-none">B</span>
             </div>
-            <h1 className="text-xl font-serif font-bold tracking-tight text-slate-900">CEO 뉴스브리핑</h1>
+            <h1 className="text-xl font-serif font-bold tracking-tight text-slate-900">Briefify</h1>
           </div>
           <Button 
             onClick={() => { setData(null); setSelectedItems([]); setLoading(false); }}
